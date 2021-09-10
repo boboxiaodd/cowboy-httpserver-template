@@ -36,7 +36,7 @@ For more command , see `server-ctl help`
 ]).
 ````
 
-`/api/module/function`  will automatic route to `module_control:function`
+`/api/module/function`  will automatic route to `module_control:function` (take `_control` is very important for security)
 
 the function's arguments is a maps from JSON
 
