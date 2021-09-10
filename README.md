@@ -77,3 +77,7 @@ It will save the  upload file to `[Priv Dir]/tmp/xxxxx` and add `path` to maps w
 `#{<<"Param1">> := Param1, <<"Param2">> := Param2 , <<"path">> := FilePath}` 
 
 You can change it according to your needs
+
+# Usage
+Modify Listener port in file `priv/app.config`
+Reference example from `src/control/*` and create your control
