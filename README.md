@@ -39,7 +39,7 @@ For more command , see `server-ctl help`
 
 `/api/module/function`  will automatic route to `module_control:function` (the suffix `_control` is very important for security)
 
-the function's arguments is a maps from JSON
+the function's arguments is a maps from request JSON body
 
 If add a new control , it will try to apply `Mod:module_info` to active module . 
 
@@ -67,9 +67,6 @@ router(Data) ->
 First change ROUTER , and exectue :
 
 `server-ctl graceful`
-
-# JSON to maps
-JSON will convent to maps , and send to control's function
 
 
 # Auto Save Upload file
