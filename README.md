@@ -35,7 +35,8 @@ Build
 ````
 
 `/api/xxxxx`  will automatic router `xxxxx_control.erl`
-add a new control , it will try to apply `Mod:module_info` to active module . 
+
+If add a new control , it will try to apply `Mod:module_info` to active module . 
 
 ```erlang
 router(Data) ->
