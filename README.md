@@ -37,6 +37,7 @@ For more command , see `server-ctl help`
 ````
 
 `/api/module/function`  will automatic route to `module_control:function`
+the function's arguments is a maps from JSON
 
 If add a new control , it will try to apply `Mod:module_info` to active module . 
 
