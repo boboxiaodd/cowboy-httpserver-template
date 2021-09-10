@@ -29,6 +29,7 @@ For more command , see `server-ctl help`
 ```erlang
 -define(ROUTER, [
     {"/api/[...]", api_router, []}, % This router will automatic
+    {"/api_v1/[...]", api_router, []}, % This router will automatic
     {"/admin/", cowboy_static, {priv_file, http_server, "admin/index.html"}},
     {"/admin/[...]", cowboy_static, {priv_dir, http_server, "admin/"}},
     {"/", cowboy_static, {priv_file, http_server, "home/index.html"}},
