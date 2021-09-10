@@ -34,7 +34,7 @@ Build
 ]).
 ````
 
-`/api/module/function`  will automatic route to `module_control.erl` 's `function`
+`/api/module/function`  will automatic route to `module_control:function`
 
 If add a new control , it will try to apply `Mod:module_info` to active module . 
 
