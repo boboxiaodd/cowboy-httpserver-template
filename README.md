@@ -72,4 +72,6 @@ JSON will convent to maps , and send to control's function
 # Auto Save Upload file
 When the content-type is `multipart/form-data` 
 
-It will save the  upload file to `[Priv Dir]/tmp/xxxxx` and send  `#{<<"filetype">> := FileType, <<"path">> := FilePath}` to control's function
+It will save the  upload file to `[Priv Dir]/tmp/xxxxx` and add `path` to Params , like  
+
+`#{<<"Param1">> := Param1, <<"Param2">> := Param2 , <<"path">> := FilePath}` 
