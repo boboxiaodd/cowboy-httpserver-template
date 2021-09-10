@@ -1,0 +1,87 @@
+<!-- component template -->
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left"></div>
+                <div class="title">{{device}} App 首页</div>
+                <div class="right"></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="list media-list home-media-list">
+                <ul>
+                    {{#each app_list}}
+                    <li>
+                        <a href="/package/{{id}}/{{app_name}}/" class="item-link item-content">
+                            <div class="item-media">
+                                <img src="{{js ' osspath + this.app_logo' }}">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title">{{ app_name }}</div>
+                                </div>
+                                <div class="item-subtitle">{{ js "getDateDiff(this.app_uptime)" }}</div>
+                                <div class="item-text">{{ app_desc }}</div>
+                            </div>
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .home-media-list img{
+        width: 75px;
+        height: 75px;
+        border-radius: 15px;
+    }
+</style>
+<!-- rest of component data and methods -->
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                page:1,
+                app_name: "",
+                device : Framework7.device.ios ? "iOS":"Android",
+                has_more: false,
+                myselect:false,
+                app_list: []
+            }
+        },
+        methods: {
+            openselect: function(){
+                console.log('open');
+                this.myselect.open();
+            },
+            TestFun: function () {
+                console.log("test")
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                this.$app.preloader.show();
+                request_uri("/api/package/app_list", {page: this.page}, function (data) {
+                    self.$setState({
+                        page: self.page,
+                        has_more: data.has_more,
+                        app_list: data.list,
+                    });
+                    self.$app.preloader.hide();
+                })
+                console.log("pageInit");
+            },
+            pageAfterIn: function(){
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            },
+        }
+    }
+</script>

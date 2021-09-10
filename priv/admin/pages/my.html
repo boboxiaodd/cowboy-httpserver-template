@@ -1,0 +1,76 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left"></div>
+                <div class="title">修改密码</div>
+                <div class="right"><a @click="changepass()" class="link" href="#">
+                    <i class="icon f7-icons">check</i>
+                </a></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="list no-hairlines">
+                <ul>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">新密码</div>
+                            <div class="item-input-wrap">
+                                <input id="newpassword" type="password" autocomplete="password" value="" placeholder="输入新密码">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">验证新密码</div>
+                            <div class="item-input-wrap">
+                                <input id="repassword" type="password" autocomplete="password" value="" placeholder="再次输入新密码">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- rest of component data and methods -->
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                myswiper:false
+            }
+        },
+        methods: {
+            changepass: function () {
+                var self = this;
+                var newpassowrd = $$("#newpassword").val();
+                if(newpassowrd == ""){
+                    this.$app.dialog.alert("密码不能为空!", "错误");
+                    return;
+                }
+                if(newpassowrd != $$("#repassword").val()){
+                    this.$app.dialog.alert("两次密码输入不一致", "错误");
+                    return;
+                }
+                this.$app.preloader.show();
+                request_uri("/api/admin/change_pass",{password: md5($$("#newpassword").val())},function (data) {
+                    self.$app.dialog.alert(data.msg, "提示");
+                    self.$app.preloader.hide();
+                })
+            }
+        },
+        on: {
+            pageInit: function () {
+                console.log("pageInit");
+            },
+            pageMounted: function(){
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            },
+        }
+    }
+</script>

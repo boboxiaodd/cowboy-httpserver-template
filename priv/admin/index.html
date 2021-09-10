@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Color theme for statusbar -->
+    <!--<meta name="theme-color" content="#2196f3">-->
+    <!-- Your app title -->
+    <title>包管理系统</title>
+    <!-- Path to Framework7 Library CSS -->
+    <link rel="stylesheet" href="http://djazhong.oss-cn-beijing.aliyuncs.com/static/css/framework7.bundle.min.css">
+    <link rel="stylesheet" href="http://djazhong.oss-cn-beijing.aliyuncs.com/static/css/framework7-icons.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="admin/css/my-app.css">
+</head>
+<body>
+<!-- App root element -->
+<div id="app">
+    <!-- Statusbar overlay -->
+    <div class="statusbar"></div>
+    <div class="panel panel-left panel-reveal">
+        <div class="view view-menu">
+
+        </div>
+    </div>
+    <!-- Your main view, should have "view-main" class -->
+    <div class="view view-main">
+
+    </div>
+    <div class="popup login-screen">
+        <div class="view">
+            <div class="page">
+                <div class="page-content login-screen-content">
+                    <div class="login-screen-title">登录包管理系统</div>
+                    <form>
+                        <div class="list">
+                            <ul>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">管理员</div>
+                                        <div class="item-input-wrap">
+                                            <input id="username" type="text" autocomplete="username" value="" placeholder="输入管理员名">
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">密码</div>
+                                        <div class="item-input-wrap">
+                                            <input id="password" type="password" autocomplete="password" value="" placeholder="输入管理员密码">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="list">
+                            <ul>
+                                <li><a id="btnLogin" class="item-link list-button" href="#">登录管理</a></li>
+                            </ul>
+                            <div class="block-footer">
+                                <p>为了确保安全，密码不保存在本地，每次刷新都需要重新登录</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Path to Framework7 Library JS-->
+<script type="text/javascript" src="http://djazhong.oss-cn-beijing.aliyuncs.com/static/js/framework7.bundle.min.js"></script>
+<script type="text/javascript" src="http://djazhong.oss-cn-beijing.aliyuncs.com/static/js/md5.min.js"></script>
+<script type="text/javascript" src="admin/js/my-app.js"></script>
+</body>
+</html>

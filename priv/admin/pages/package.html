@@ -1,0 +1,413 @@
+<!-- component template -->
+<template>
+    <div class="page">
+        <div class="popup popup-add-package">
+            <div class="page">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left"><a id="btnAddPackageCancel" href="#" class="link icon-only"><i
+                            class="icon f7-icons">close</i></a></div>
+                        <div class="title">增加{{type}}包</div>
+                        <div class="right"><a id="btnAddPackageSubmit" href="#" class="link icon-only"><i
+                            class="icon f7-icons">check</i></a></div>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <form class="list no-harilines-between" id="my-form">
+                        <ul>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">包名称</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="pk_name" placeholder="包名称可通过文件自动识别">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">环境</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="pk_env" readonly="readonly" placeholder="可自动识别">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">版本号</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="pk_version" placeholder="版本号可通过文件自动识别">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">包文件</div>
+                                        <div class="item-input-wrap">
+                                            <input type="file" accept=".ipa,.apk" class="hide" id="upload_package_file">
+                                            <div class="row">
+                                                <div class="col-80">
+                                                    <input type="text" placeholder="可以直接把文件拖进来" readonly="readonly" id="pk_url">
+                                                </div>
+                                                <div class="col-20" align="right">
+                                                    <a id="btnUploadPackageUrl" href="#" class="link icon-only">
+                                                        <i class="icon f7-icons">cloud_upload_fill</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                    <div class="block-footer">
+                        包文件名约定:(rel代表正式包,dev代表开发包)<br>
+                        <p>App名称-环境-版本号.ipa (例: <strong class="bg-color-gray">比友-dev-1.1.0.ipa</strong> )</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left"></div>
+                <div class="title">{{type}}包管理</div>
+                <div class="right"></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="data-table data-table-init card">
+                <div class="card-header">
+                    <div class="data-table-header">
+                        <div class="data-table-title">{{type}}包列表</div>
+                        <div class="data-table-actions">
+                            <a href="#" class="link icon-only add-package"><i class="icon f7-icons">add_round_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="data-table-header-selected">
+                        <div class="data-table-title-selected">
+                            选中<span class="data-table-selected-count"></span>条记录
+                        </div>
+                        <div class="data-table-actions">
+                            <a id="btnRemovePackage" href="#" class="link icon-only del-package"><i class="icon f7-icons">trash_fill</i></a>
+                            <a href="#" class="link icon-only add-package"><i class="icon f7-icons">add_round_fill</i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="checkbox-cell"><label class="checkbox"><input type="checkbox"><i
+                                class="icon-checkbox"></i></label></th>
+                            <th class="label-cell">名称</th>
+                            <th class="label-cell">环境</th>
+                            <th class="label-cell">版本号</th>
+                            <th class="label-cell">上传时间</th>
+                            <th class="label-cell">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each music_list}}
+                        <tr>
+                            <td class="checkbox-cell"><label class="checkbox"><input value="{{ id }}" type="checkbox"><i
+                                class="icon-checkbox"></i></label></td>
+                            <td class="label-cell">{{ pk_name }}</td>
+                            <td class="label-cell">{{#if pk_env}} 正式 {{else}} 开发 {{/if}}
+                            </td>
+                            <td class="label-cell">{{ pk_version}}</td>
+                            <td class="label-cell">{{ js "formatDate(this.pk_uptime*1000)" }}</td>
+                            <td class="label-cell"><a @click="pk_edit({{id}})" href="#" class="link">修改</a>|<a @click="remove_ids({{id}})" href="#" class="link">删除</a> </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="data-table-footer" style="padding-right:20px;">
+                    <div class="data-table-pagination">
+                        当前第 {{page}} 页
+                        {{#js_if "this.page > 1"}}
+                        <a @click="load_page(1)" href="#" class="link">首页</a>
+                        {{/js_if}}
+                        &nbsp; <a @click="load_page({{js 'this.page - 1'}})" href="#" class="link {{#js_if 'this.page == 1' }}disabled{{/js_if}}">
+                            上一页
+                        </a>
+                        &nbsp; <a @click="load_page({{js 'this.page + 1'}})" href="#" class="link {{#js_if '!this.has_more' }}disabled{{/js_if}}">下一页</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .color-red{
+        color:red;
+    }
+    .bg-color-gray{
+        padding: 3px;
+        background-color: #f5f5f5 !important;
+    }
+    .label-cell img {
+        padding-top: 8px;
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<!-- rest of component data and methods -->
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                type: 'ios',
+                mod_id:0,
+                page: 1,
+                music_list: [],
+                has_more: false,
+                add_popup: false
+            }
+        },
+        methods: {
+            do_upload: function (e, callback, t) {
+                this.$app.preloader.show();
+                var self = this;
+                var files = e.target.files || e.dataTransfer.files;
+                if (files) {
+                    var file = files[0];
+                    file.type = t;
+                    var pkginfo = file.name.split(".");
+                    pkginfo.pop();
+                    pkginfo =  pkginfo.join(".").split("-");
+                    $$("#pk_name").val(pkginfo[0]);
+                    $$("#pk_env").val(pkginfo[1]);
+                    $$("#pk_version").val(pkginfo[2]);
+                    var reader = new FileReader();
+                    //将文件以二进制形式读入页面
+                    reader.readAsArrayBuffer(file);
+                    reader.onload = function (f) {
+                        self.send_file(this.result, t, function (data) {
+                            self.$app.preloader.hide();
+                            console.log(data);
+                            if (data.ok == 1) {
+                                callback(data.filepath);
+                            } else {
+                                self.$app.dialog.alert(data.msg, "错误");
+                            }
+                        })
+                    }
+                }
+            },
+            send_file: function (imagedata, filetype, callback) {
+                var blob = new Blob([imagedata]);
+                var fd = new FormData();
+                fd.append("file", blob , "file.dat");
+                fd.append("filetype", filetype);
+                this.$app.request({
+                    url: pathbase + "/api/admin/upload_package",
+                    data: fd,
+                    method: 'POST',
+                    contentType: 'multipart/form-data',
+                    success: function (data) {
+                        callback(JSON.parse(data));
+                    }
+                });
+            },
+            load_page: function (p) {
+                var self = this;
+                var t = this.type == 'ios' ? 1 : 0 ;
+                request_uri("/api/admin/package_list", {page: p, type: t}, function (data) {
+                    self.$setState({
+                        type:  self.type,
+                        music_list: data.list,
+                        has_more: data.has_more,
+                        page : p
+                    });
+                })
+            },
+            get_music_info_from_id:function(id){
+                if(id == 0) return {};
+                for(var i=0;i<this.music_list.length;i++){
+                    if(this.music_list[i].id == id){
+                        return this.music_list[i];
+                    }
+                }
+            },
+            pk_edit:function (id){
+                this.mod_id = id;
+                var self = this;
+                $$("#upload_package_file").attr("accept",self.type == 'ios'?'.ipa':'.apk');
+                var pk_info = this.get_music_info_from_id(id);
+                $$("#pk_name").val(pk_info.pk_name);
+                $$("#pk_env").val(pk_info.pk_env == 1 ? 'rel':'dev');
+                $$("#pk_version").val(pk_info.pk_version);
+                $$("#pk_url").val(pk_info.pk_url);
+                $$(".popup-add-package").find(".title").text("修改"+this.type+"包");
+                self.add_popup = self.$app.popup.create({
+                    el: '.popup-add-package',
+                    closeByBackdropClick: false
+                }).open();
+            },
+            remove_ids:function (ids) {
+                if(typeof(ids) == 'number'){
+                    var pk_ids = [ids];
+                }else{
+                    var pk_ids = ids;
+                }
+                var self = this;
+                this.$app.dialog.confirm("确定要删除选中的项目吗？对应已上传文件也将自动删除！", "确认操作", function () {
+                    request_uri("/api/admin/remove_package", {ids: pk_ids}, function (data) {
+                        self.$router.refreshPage()
+                    })
+                }, function () {
+                })
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                this.type = this.$router.currentRoute.params.t;
+                if(this.type == 'ios'){
+                    var mineType = 'application/ipa';
+                }else{
+                    var mineType = 'application/apk';
+                }
+                this.load_page(1);
+                $$("#btnRemovePackage").on('click',function () {
+                    var items = self.$el.find("input[type='checkbox']");
+                    var music_ids = [];
+                    for(var i=1;i<items.length;i++){
+                        if(items[i].checked) {
+                            music_ids.push(parseInt(items[i].value))
+                        }
+                    }
+                    self.remove_ids(music_ids);
+                })
+                $$("#btnAddPackageCancel").on('click', function () {
+                    var must_del = false;
+                    if(self.mod_id > 0){ //修改
+                        var pk_info = self.get_music_info_from_id(self.mod_id);
+                        if($$("#pk_url").val() != pk_info.pk_url) {
+                            must_del = true;
+                        }
+                    }else {
+                        if($$("#pk_url").val() != "") {
+                            must_del = true;
+                        }
+                    }
+                    if (must_del) {
+                        self.$app.dialog.confirm("确定要取消吗？取消将删除已上传文件！", "确认操作", function () {
+                            if ($$("#pk_url").val() != "") {
+                                request_uri("/api/admin/del_file", {path: $$("#pk_url").val()}, function (data) {
+                                    $$("#pk_url").val("");
+                                })
+                            }
+                            $$("#pk_name").val("");
+                            $$("#pk_version").val("");
+                            self.add_popup.close();
+                        }, function () {
+                        })
+                    } else {
+                        self.add_popup.close();
+                    }
+                })
+                $$("#btnAddPackageSubmit").on('click',function () {
+                    if($$("#pk_name").val() == "" ||
+                        $$("#pk_version").val() == "" ||
+                        $$("#pk_url").val() == ""){
+                            self.$app.dialog.alert("信息不完整!");
+                        return false;
+                    }
+                    self.$app.preloader.show();
+                    request_uri('/api/admin/add_package', {
+                        id : self.mod_id,
+                        type : self.type == 'ios' ? 1 : 0,
+                        pk_name: $$("#pk_name").val(),
+                        pk_version: $$("#pk_version").val(),
+                        pk_env: $$("#pk_env").val() == 'rel'?1:0,
+                        pk_url: $$("#pk_url").val()
+                    }, function (data) {
+                        self.add_popup.close();
+                        self.$app.preloader.hide();
+                        self.$router.refreshPage()
+                    })
+                })
+                $$("#upload_package_file").on("change", function (e) {
+                    self.do_upload(e, function (path) {
+                        $$("#pk_url").val(path);
+                    },mineType);
+                });
+                $$("#btnUploadPackageUrl").on('click',function () {
+                    if ($$("#pk_url").val() != "") {
+                        self.$app.dialog.confirm("确定要删除旧文件，重新上传新文件？", "确认操作", function () {
+                            request_uri("/api/admin/del_file", {path: $$("#pk_url").val()}, function (data) {
+                                if (data.ok == 1) {
+                                    $$("#pk_url").val("");
+                                    $$("#upload_package_file").click();
+                                }
+                            })
+                        }, function () {
+                        })
+                    } else {
+                        $$("#upload_package_file").click();
+                    }
+                })
+                var dragobj1 = $$("#pk_url")[0];
+                dragobj1.ondragover = () => {return false;};
+                dragobj1.ondragleave = () => {return false;};
+                dragobj1.ondragend = () => {return false;};
+                dragobj1.ondrop = (event) => {
+                    event.preventDefault();
+                    self.do_upload(event,function (path) {
+                        $$("#pk_url").val(path);
+                    },mineType);
+                    return false;
+                };
+                var dragobj2 = $$("#pk_url")[0];
+                dragobj2.ondragover = () => {return false;};
+                dragobj2.ondragleave = () => {return false;};
+                dragobj2.ondragend = () => {return false;};
+                dragobj2.ondrop = (event) => {
+                    event.preventDefault();
+                    self.do_upload(event,function (path) {
+                        $$("#pk_url").val(path);
+                    },mineType);
+                    return false;
+                };
+                $$(".add-package").on('click', function () {
+                    self.mod_id = 0;
+                    $$("#upload_package_file").attr("accept",self.type == 'ios'?'.ipa':'.apk');
+                    $$("#pk_name").val("");
+                    $$("#pk_version").val("");
+                    $$("#pk_env").val("");
+                    $$("#pk_url").val("");
+                    $$(".popup-add-package").find(".title").text("增加"+self.type+"包");
+                    self.add_popup = self.$app.popup.create({
+                        el: '.popup-add-package',
+                        closeByBackdropClick: false
+                    }).open();
+                })
+                var picker = app.picker.create({
+                    inputEl: '#pk_env',
+                    cols: [
+                        {
+                            values: ['rel', 'dev'],
+                            displayValues: ['正式包', '开发包'],
+                        }
+                    ]
+                });
+            },
+            pageMounted: function () {
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            }
+        }
+    }
+</script>

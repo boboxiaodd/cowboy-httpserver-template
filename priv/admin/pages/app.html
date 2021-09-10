@@ -1,0 +1,335 @@
+<!-- component template -->
+<template>
+    <div class="page">
+        <div class="popup popup-add-app">
+            <div class="page">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left"><a id="btnAddAppCancel" href="#" class="link icon-only"><i
+                            class="icon f7-icons">close</i></a></div>
+                        <div class="title">增加APP</div>
+                        <div class="right"><a id="btnAddAppSubmit" href="#" class="link icon-only"><i
+                            class="icon f7-icons">check</i></a></div>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <form class="list no-harilines-between" id="my-form">
+                        <ul>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">APP名称</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="app_name" placeholder="APP名称">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">APP BundleId</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="app_bundle_id" placeholder="APP Bundle Id">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">APP图标</div>
+                                        <div class="item-input-wrap">
+                                            <input type="file" accept="image/jpeg,image/png" class="hide" id="upload_app_logo">
+                                            <div class="row">
+                                                <div class="col-80">
+                                                    <input type="text" readonly="readonly" placeholder="图标大小建议使用1024pt(png,jpg)" id="app_logo">
+                                                </div>
+                                                <div class="col-20" align="right">
+                                                    <a id="btnUploadAppLogo" href="#" class="link icon-only">
+                                                        <i class="icon f7-icons">cloud_upload_fill</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">APP简介</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" id="app_desc" placeholder="APP简介（最多250个字）">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">APP管理</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="data-table data-table-init card">
+                <div class="card-header">
+                    <div class="data-table-header">
+                        <div class="data-table-title">APP列表</div>
+                        <div class="data-table-actions">
+                            <a href="#" class="link icon-only add-app"><i class="icon f7-icons">add_round_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="data-table-header-selected">
+                        <div class="data-table-title-selected">
+                            选中<span class="data-table-selected-count"></span>条记录
+                        </div>
+                        <div class="data-table-actions">
+                            <a id="btnRemoveApp" href="#" class="link icon-only del-artist"><i class="icon f7-icons">trash_fill</i></a>
+                            <a href="#" class="link icon-only add-app"><i class="icon f7-icons">add_round_fill</i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="checkbox-cell"><label class="checkbox"><input type="checkbox"><i
+                                class="icon-checkbox"></i></label></th>
+                            <th class="label-cell">Id</th>
+                            <th class="label-cell">名称</th>
+                            <th class="label-cell">图标</th>
+                            <th class="label-cell">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each app_list}}
+                        <tr>
+                            <td class="checkbox-cell"><label class="checkbox"><input name="app_id" value="{{ id }}" type="checkbox"><i
+                                class="icon-checkbox"></i></label></td>
+                            <td class="label-cell">{{ id }}</td>
+                            <td class="label-cell">{{ app_name }}</td>
+                            <td class="label-cell"><img src='{{ js "osspath.concat(this.app_logo)" }}'></td>
+                            <td class="label-cell"><a @click="edit_app({{id}})" href="#">修改</a> </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="data-table-footer">
+                    <div class="data-table-pagination">
+                        当前第 {{page}} 页
+                        {{#js_if "this.page > 1"}}
+                        <a @click="load_page(1)" href="#" class="link">首页</a>
+                        {{/js_if}}
+                        &nbsp; <a @click="load_page({{js 'this.page - 1'}})" href="#" class="link {{#js_if 'this.page == 1' }}disabled{{/js_if}}">
+                            上一页
+                        </a> &nbsp; <a @click="load_page({{js 'this.page + 1'}})" href="#" class="link {{#js_if '!this.has_more' }}disabled{{/js_if}}">
+                            下一页
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- rest of component data and methods -->
+<style>
+    .label-cell img {
+        padding-top: 8px;
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                mod_id: 0,
+                page: 1,
+                has_more: false,
+                app_list: [],
+                add_popup: false,
+            }
+        },
+        methods: {
+            edit_app:function(id){
+                this.mod_id = id;
+                var info = this.get_app_info_from_id(id);
+                $$("#app_name").val(info.app_name);
+                $$("#app_logo").val(info.app_logo);
+                $$("#app_bundle_id").val(info.app_bundle_id);
+                $$("#app_desc").val(info.app_desc);
+                $$(".popup-add-app").find(".title").text("修改艺术家");
+                this.add_popup = this.$app.popup.create({
+                    el: '.popup-add-app',
+                    closeByBackdropClick: false
+                }).open();
+            },
+            do_upload: function (e, callback) {
+                this.$app.preloader.show();
+                var self = this;
+                var files = e.target.files || e.dataTransfer.files;
+                if (files) {
+                    var file = files[0];
+                    var reader = new FileReader();
+                    //将文件以二进制形式读入页面
+                    reader.readAsArrayBuffer(file);
+                    reader.onload = function (f) {
+                        self.send_file(this.result, file.type, function (data) {
+                            self.$app.preloader.hide();
+                            console.log(data);
+                            if (data.ok == 1) {
+                                callback(data.filepath);
+                            } else {
+                                self.$app.dialog.alert(data.msg, "错误");
+                            }
+                        })
+                    }
+                }
+            },
+            send_file: function (imagedata, filetype, callback) {
+                var blob = new Blob([imagedata]);
+                var fd = new FormData();
+                fd.append("file", blob , "file.dat");
+                fd.append("filetype", filetype);
+                this.$app.request({
+                    url: pathbase + "/api/admin/upload_logo",
+                    data: fd,
+                    method: 'POST',
+                    contentType: 'multipart/form-data',
+                    success: function (data) {
+                        callback(JSON.parse(data));
+                    }
+                });
+            },
+            get_app_info_from_id:function(id){
+                for(var i=0;i<this.app_list.length;i++){
+                    if(this.app_list[i].id == id){
+                        return this.app_list[i];
+                    }
+                }
+            },
+            load_page: function (p) {
+                var self = this;
+                request_uri("/api/admin/app_list", {page: p}, function (data) {
+                    self.$setState({
+                        page: p,
+                        has_more: data.has_more,
+                        app_list: data.list,
+                    });
+                })
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                this.load_page(1);
+                $$("#btnAddAppCancel").on('click', function () {
+                    var must_del = false;
+                    if(self.mod_id > 0){ //修改
+                        var app_info = self.get_app_info_from_id(self.mod_id);
+                        if($$("#app_logo").val() != app_info.app_logo) {
+                            must_del = true;
+                        }
+                    }else {
+                        if($$("#app_logo").val() != "") {
+                            must_del = true;
+                        }
+                    }
+                    if(must_del) {
+                        self.$app.dialog.confirm("确定要取消吗？取消将删除已上传文件！", "确认操作", function () {
+                            request_uri("/api/admin/del_file", {path: $$("#app_logo").val()}, function (data) {
+                                $$("#app_logo").val("");
+                                self.add_popup.close();
+                            })
+                        }, function () {
+                        })
+                    }else{
+                        self.add_popup.close();
+                    }
+                })
+                $$("#btnRemoveApp").on('click',function () {
+                    var items = self.$el.find("input[type='checkbox']");
+                    var app_ids = [];
+                    for(var i=1;i<items.length;i++){
+                        if(items[i].checked) {
+                            app_ids.push(parseInt(items[i].value))
+                        }
+                    }
+                    self.$app.dialog.confirm("确定要删除选中的项目吗？对应已上传文件也将自动删除！", "确认操作", function () {
+                        request_uri("/api/admin/remove_app", {ids: app_ids}, function (data) {
+                            self.$router.refreshPage()
+                        })
+                    }, function () {
+                    })
+                })
+                $$("#btnAddAppSubmit").on('click', function () {
+                    if($$("#app_name").val() == "" ||
+                        $$("#app_logo").val() == "" ||
+                        $$("#app_bundle_id").val() == ""
+                    ){
+                        self.$app.dialog.alert("名字,图标,BundleId 不能为空!");
+                        return false;
+                    }
+                    self.$app.preloader.show();
+                    request_uri("/api/admin/add_app", {
+                        app_name: $$("#app_name").val(),
+                        app_logo: $$("#app_logo").val(),
+                        app_bundle_id : $$("#app_bundle_id").val(),
+                        app_desc: $$("#app_desc").val(),
+                        id: self.mod_id
+                    }, function (data) {
+                        self.add_popup.close();
+                        self.$app.preloader.hide();
+                        self.$router.refreshPage()
+                    })
+                })
+                
+                $$("#upload_app_logo").on("change", function (e) {
+                    self.do_upload(e, function (path) {
+                        $$("#app_logo").val(path);
+                    });
+                });
+                $$("#btnUploadAppLogo").on('click', function () {
+                    if ($$("#app_logo").val() != "") {
+                        self.$app.dialog.confirm("确定要删除旧文件，重新上传新文件？", "确认操作", function () {
+                            request_uri("/api/admin/del_file", {path: $$("#app_logo").val()}, function (data) {
+                                if (data.ok == 1) {
+                                    $$("#app_logo").val("");
+                                    $$("#upload_app_logo").click();
+                                }
+                            })
+                        }, function () {
+                        })
+                    } else {
+                        $$("#upload_app_logo").click();
+                    }
+                });
+                $$(".add-app").on('click', function () {
+                    self.mod_id = 0;
+                    $$("#app_name").val("");
+                    $$("#app_logo").val("");
+                    $$("#app_bundle_id").val("");
+                    $$("#app_desc").val("");
+                    $$(".popup-add-app").find(".title").text("增加App");
+                    self.add_popup = self.$app.popup.create({
+                        el: '.popup-add-app',
+                        closeByBackdropClick: false
+                    }).open();
+                })
+            },
+            pageMounted: function () {
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            }
+        }
+    }
+</script>

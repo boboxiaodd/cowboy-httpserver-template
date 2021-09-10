@@ -1,0 +1,40 @@
+.data-table .data-table-actions a.link{
+    color:var(--f7-theme-color);
+}
+/** {*/
+    /*-webkit-tap-highlight-color: rgba(0,0,0,0); !* make transparent link selection, adjust last value opacity 0 to 1.0 *!*/
+    /*-webkit-touch-callout: none; !* iOS Safari *!*/
+    /*-webkit-user-select: none;*/
+/*}*/
+/* Left Panel right border when it is visible by breakpoint */
+.panel-left.panel-visible-by-breakpoint:before {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background: rgba(0,0,0,0.1);
+    content: '';
+    z-index: 6000;
+}
+
+/* Hide navbar link which opens left panel when it is visible by breakpoint */
+.panel-left.panel-visible-by-breakpoint ~ .view .navbar .panel-open[data-panel="left"] {
+    display: none;
+}
+
+.card{
+    border-radius: unset;
+}
+
+.popup .list ul:before {
+    display: none;
+}
+.popup .list ul:after {
+    display: none;
+}
+
+
+.hide{
+    display: none;
+}

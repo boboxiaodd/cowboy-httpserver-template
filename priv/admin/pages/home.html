@@ -1,0 +1,67 @@
+<!-- component template -->
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">首页</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-header">操作日志</div>
+            <div class="list">
+                <ul>
+                    {{#each list}}
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon f7-icons">time</i></div>
+                            <div class="item-inner">
+                                <div class="item-title">{{ uid }} {{js "parseEvent(this.content)"}}</div>
+                                <div class="item-after">{{js "getDateDiff(this.uptime)"}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .item-title .icon {
+        /*font-size: 17px;*/
+        vertical-align: inherit;
+    }
+</style>
+<!-- rest of component data and methods -->
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                list:[]
+            }
+        },
+        methods: {
+            TestFun: function () {
+                console.log("test")
+            }
+        },
+        on: {
+            pageInit: function () {
+                console.log("pageInit");
+                var self = this;
+                request_uri("/api/admin/log",{},function (data) {
+                    self.$setState({
+                        list: data.list
+                    })
+                })
+            },
+            pageMounted: function(){
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            },
+        }
+    }
+</script>

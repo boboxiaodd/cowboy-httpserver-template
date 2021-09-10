@@ -1,0 +1,110 @@
+<!-- component template -->
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left"><a href="#" class="link back"><i class="icon f7-icons">chevron_left</i></a></div>
+                <div class="title">{{app_name}} 包列表</div>
+                <div class="right"></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="list media-list my-media-list">
+                <ul>
+                    {{#each pkg_list}}
+                    <li>
+
+                        <a @click="locklink()" href="{{#if pk_type}}itms-services://?action=download-manifest&url={{js 'osspath + this.pk_plisturl'}}{{else}}{{js 'osspath + this.pk_url'}}{{/if}}" class="external item-link item-content">
+                            <div class="item-media">
+                                <img src="{{js ' osspath + this.app_logo' }}">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title">{{ pk_name }}</div>
+                                    <div class="item-after">{{ pk_version }}</div>
+                                </div>
+                                <div class="item-text">{{#if pk_type}}
+                                    <i class="icon f7-icons">logo_apple</i>
+                                    {{else}}
+                                    <i class="icon f7-icons">logo_android</i>
+                                    {{/if}}
+                                    {{#if pk_env}}
+                                    <strong style="color:green">正式包</strong>
+                                    {{else}}
+                                    <span style="color:gray">开发包</span>
+                                    {{/if}} ({{ js "getDateDiff(this.pk_uptime)" }})
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .my-media-list img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+    }
+
+    .item-text .icon {
+        font-size: 17px;
+        vertical-align: inherit;
+    }
+</style>
+<!-- rest of component data and methods -->
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            return {
+                page: 1,
+                appid: parseInt(this.$router.currentRoute.params.id),
+                app_name: this.$router.currentRoute.params.name,
+                device: Framework7.device.ios ? "iOS" : "Android",
+                has_more: false,
+                pkg_list: []
+            }
+        },
+        methods: {
+            locklink: function () {
+                var self = this;
+                this.$app.preloader.show();
+                window.setTimeout(function () {
+                    self.$app.preloader.hide();
+                },3000);
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                this.$app.preloader.show();
+                this.appid = parseInt(this.$router.currentRoute.params.id);
+                this.app_name = this.$router.currentRoute.params.name;
+                request_uri("/api/package/pkg_list", {
+                    page: 1,
+                    appid: this.appid,
+                    type: Framework7.device.ios ? 1 : 0
+                }, function (data) {
+                    self.$setState({
+                        app_name: self.app_name,
+                        page: self.page,
+                        has_more: data.has_more,
+                        pkg_list: data.list,
+                    });
+                    self.$app.preloader.hide();
+                })
+                console.log("pageInit");
+            },
+            pageMounted: function () {
+                console.log("pageMounted")
+            },
+            pageBeforeRemove: function () {
+                console.log("pageBeforeRemove")
+            },
+        }
+    }
+</script>
