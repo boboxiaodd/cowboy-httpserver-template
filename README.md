@@ -24,3 +24,34 @@ Build
 
 # Automatic Router
 
+```erlang
+-define(ROUTER, [
+    {"/api/[...]", api_router, []}, % This router will automatic
+    {"/admin/", cowboy_static, {priv_file, http_server, "admin/index.html"}},
+    {"/admin/[...]", cowboy_static, {priv_dir, http_server, "admin/"}},
+    {"/", cowboy_static, {priv_file, http_server, "home/index.html"}},
+    {"/[...]", cowboy_static, {priv_dir, http_server, "home/"}}
+]).
+````
+
+`/api/xxxxx`  will automatic router `xxxxx_control.erl`
+add a new control , it will try to apply `Mod:module_info` to active module . 
+
+```erlang
+router(Data) ->
+    case binary:split(get(path), <<"/">>, [global]) of
+        [_, _, BinModule | BinControl] ->
+            Mod = binary_to_existing_atom(<<BinModule/binary, "_control">>, latin1),
+            BinControl1 = list_to_binary(BinControl),
+            Fun = try
+                      binary_to_existing_atom(<<"handle_", BinControl1/binary>>, latin1)
+                  catch
+                      _:_ ->
+                          lager:info(server_common:colorformat(blackb, "can find ~p:handle_~s and retry..."), [Mod,BinControl1]),
+                          _ = Mod:module_info(exports),
+                          binary_to_existing_atom(<<"handle_", BinControl1/binary>>, latin1)
+                  end,
+            apply(Mod, Fun, [Data]);
+        _ -> throw({error, bad_command})
+    end.
+```
