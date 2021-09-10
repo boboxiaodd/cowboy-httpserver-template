@@ -15,11 +15,13 @@ Automatic Router http server base by Cowboy
 
 `jose`  JWT Support
 
-Build
+Build and Run
 -----
 
     $ rebar3 compile
-
+    $ server-ctl start
+    
+For more command , see `server-ctl help`
 
 
 # Automatic Router
