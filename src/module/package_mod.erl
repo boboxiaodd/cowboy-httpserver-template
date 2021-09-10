@@ -9,9 +9,9 @@
 -module(package_mod).
 -author("linhaibo").
 -define(OSS_ACCESSKEY_ID,"LTAIG02Fe5Bsakdm").
--define(OSS_SECRET,<<"xuhaIYru0188bsLKRRXEXWxZDRnNHh">>).
--define(OSS_LAN_URL,"http://pkg-man.oss-cn-beijing-internal.aliyuncs.com").
--define(OSS_WAN_URL,<<"https://pkg-man.oss-cn-beijing.aliyuncs.com">>).
+-define(OSS_SECRET,<<"xxxxxxxxxxxxxxxx">>).
+-define(OSS_LAN_URL,"http://xxxxxxxxxxxxxxxx").
+-define(OSS_WAN_URL,<<"https://xxxxxxxxxxxxx">>).
 -define(PAGE_COUNT,20).
 %% API
 -export([put_file_to_oss/2,put_bin_to_oss/2,del_file_to_oss/1,get_oss_path/0]).
