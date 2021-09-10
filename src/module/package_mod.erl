@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(package_mod).
 -author("linhaibo").
--define(OSS_ACCESSKEY_ID,"LTAIG02Fe5Bsakdm").
+-define(OSS_ACCESSKEY_ID,"xxxxxxxxxxx").
 -define(OSS_SECRET,<<"xxxxxxxxxxxxxxxx">>).
 -define(OSS_LAN_URL,"http://xxxxxxxxxxxxxxxx").
 -define(OSS_WAN_URL,<<"https://xxxxxxxxxxxxx">>).
