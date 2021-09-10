@@ -56,3 +56,11 @@ router(Data) ->
         _ -> throw({error, bad_command})
     end.
 ```
+# JSON to maps
+JSON will convent to maps , and send to control's function
+
+
+# Auto Save Upload file
+When the content-type is `multipart/form-data` 
+
+It will save the  upload file to `[Priv Dir]/tmp/xxxxx` and send  `#{<<"filetype">> := FileType, <<"path">> := FilePath}` to control's function
