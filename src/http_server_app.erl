@@ -8,7 +8,7 @@
 -behaviour(application).
 
 %% Application callbacks
--export([start/0, start/2, stop/1]).
+-export([start/0, start/2, stop/1,reload/0]).
 -define(ROUTER, [
     {"/api/[...]", api_router, []},
     {"/admin/", cowboy_static, {priv_file, http_server, "admin/index.html"}},
@@ -48,3 +48,7 @@ stop(_State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
+reload() ->
+    Dispatch = cowboy_router:compile(?ROUTER),
+    cowboy:set_env(my_web_agent_listener, dispatch, Dispatch),
+    lager:info(server_common:colorformat(red, "web_agent RELOAD")).
