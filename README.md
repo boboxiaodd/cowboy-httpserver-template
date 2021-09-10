@@ -56,6 +56,13 @@ router(Data) ->
         _ -> throw({error, bad_command})
     end.
 ```
+
+# Hot reload cowboy router
+
+First change ROUTER , and exectue :
+
+`server-ctl graceful`
+
 # JSON to maps
 JSON will convent to maps , and send to control's function
 
