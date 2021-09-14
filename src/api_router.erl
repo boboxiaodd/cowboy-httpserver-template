@@ -72,7 +72,7 @@ get_data(Req) ->
                             #{}
                     end
             end;
-        
+
         <<"OPTIONS">> ->
             throw({error, options});
         _ -> throw({error, method_not_allow})
@@ -125,8 +125,8 @@ response(Response, Req) ->
         _ ->
             lager:info(server_common:colorformat(green, "SEND Data: ~p"), [Response])
     end,
-    
-    
+
+
     Reply = case get(auth) of
                 false -> jiffy:encode(Response);
                 Flag -> jiffy:encode(Response#{auth_flag => Flag})
@@ -164,10 +164,10 @@ multipart(Req0, Res) ->
                                     {ok, Body, Req2} = cowboy_req:read_part_body(Req1),
                                     {Req2, Res#{FieldName => Body}};
                                 {file, _FieldName, _Filename, _CType} ->
-                                    {Req2, Bin} = stream_file(Req1, <<>>),
                                     Seed = os:system_time(second),
                                     Path = code:priv_dir(http_server) ++ "/tmp/" ++ integer_to_list(Seed),
-                                    file:write_file(Path, Bin, [binary]),
+                                    Req2 = stream_file(Req1, Path),
+%%                                    file:write_file(Path, Bin, [binary]),
                                     {Req2, Res#{<<"path">> => list_to_binary(Path)}}
                             end,
             multipart(Req, NewRes);
@@ -175,10 +175,12 @@ multipart(Req0, Res) ->
             Res
     end.
 
-stream_file(Req0, Bin) ->
+stream_file(Req0, Path) ->
     case cowboy_req:read_part_body(Req0) of
         {ok, LastBodyChunk, Req} ->
-            {Req, <<Bin/binary, LastBodyChunk/binary>>};
+            file:write_file(Path, LastBodyChunk, [binary,append]),
+            Req;
         {more, BodyChunk, Req} ->
-            stream_file(Req, <<Bin/binary, BodyChunk/binary>>)
+            file:write_file(Path, BodyChunk, [binary,append]),
+            stream_file(Req, Path)
     end.
